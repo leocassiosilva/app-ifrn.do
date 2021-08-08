@@ -61,6 +61,9 @@ export function Login({navigation}) {
                     Entrar
               </Text>
             </TouchableOpacity>
+
+            <TouchableOpacity onPress={()=>navigation.navigate('Home')}><Text>Home</Text></TouchableOpacity>
+
           </View>
         </View>
     );
