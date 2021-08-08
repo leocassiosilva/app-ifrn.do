@@ -1,10 +1,39 @@
 import React, { useState, useEffect} from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import {Input} from '../components/Input'
+import api from '../services/api'
 
 
-export function Home( { navigation} ) {
+export function Login({navigation}) {
+
+    const [login, setLogin] = useState('');
+    const [senha, setSenha] = useState('');
+
+
+    async function handleLogin(){
+      var params = new URLSearchParams();
+        params.append('username', login);
+        params.append('password', senha); 
+
+      try {
+            const responseToken = await api.post('autenticacao/token/', params);
+            const {token} = responseToken.data;
+            console.log(token)
+            const responseDataUser = await api.get('minhas-informacoes/meus-dados/',{
+                headers:{
+                    'authorization': 'jwt ' + token,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+            console.log(responseDataUser.data);
+
+      }catch(error){
+        Alert.alert('Error');
+      }
+    }
+
 
     return (
         <View style={styles.container}>
@@ -23,14 +52,14 @@ export function Home( { navigation} ) {
           </View> 
 
           <View style={styles.form}>
-            <Input  placeholder="Login"/>
+            <Input label='Login' onChangeText = {text => setLogin(text)}/>
             
-            <Input  placeholder="Senha"/>
+            <Input label='Senha' senha={true} onChangeText = {text => setSenha(text)}/>
 
-            <TouchableOpacity style={styles.btn}>
-            <Text style={styles.textBtn}>
-                  Entrar
-            </Text>
+            <TouchableOpacity style={styles.btn} onPress={handleLogin}>
+              <Text style={styles.textBtn}>
+                    Entrar
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

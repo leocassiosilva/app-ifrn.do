@@ -1,13 +1,13 @@
 import React from 'react';
 import { StyleSheet, View, TextInput } from 'react-native';
 
-export function Input({placeholder}){ 
+export function Input(props){ 
     
     return(
         <View style={styles.containerInput}>
             <TextInput 
                 style={styles.input}
-                placeholder={placeholder}/>
+                placeholder={props.label} secureTextEntry={props.senha} onChangeText={props.onChangeText}/>
         </View>
     )
 }
