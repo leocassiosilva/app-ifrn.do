@@ -1,18 +1,17 @@
   
-import CheckBox from 'react-native-check-box'
-import React, {useState} from 'react'
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import Icon from 'react-native-vector-icons/EvilIcons'
+//import CheckBox from 'react-native-check-box';
+import React, {useState} from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/EvilIcons';
+import  {CheckBox}  from './CheckBox';
 
 
 export function Tarefa(props){
     
-    const [toggleCheckBox, setToggleCheckBox] = useState(false)
-
     return (
         <View style={styles.container}>
-            <CheckBox style={styles.CheckBox}
-                onValueChange={(newValue) => setToggleCheckBox(newValue)} />
+            <CheckBox isChecked={props.checked} onPress={props.onChecked} />
+
 
             <Text style={styles.tarefa}>{props.name}</Text>
 

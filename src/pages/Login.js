@@ -1,39 +1,70 @@
 import React, { useState, useEffect} from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Alert, Keyboard } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import {Input} from '../components/Input'
 import api from '../services/api'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export function Login({navigation}) {
 
+    const keyAsyncStorage = "@ifrndo:login";
+
     const [login, setLogin] = useState('');
     const [senha, setSenha] = useState('');
 
+    async function autenticationUser(){
+      try {
+        const retorno = await AsyncStorage.getItem(keyAsyncStorage); 
+        const parseJson = JSON.parse(retorno); 
+
+        token = (parseJson || '');  
+
+        await api.get('minhas-informacoes/meus-dados/',{
+          headers:{
+              'authorization': 'jwt ' + token,
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+          }
+        });
+
+        navigation.navigate('Home');
+
+      } catch(error){
+        console.log("Login"); 
+      }
+    }
+
 
     async function handleLogin(){
-      var params = new URLSearchParams();
+        var params = new URLSearchParams();
         params.append('username', login);
         params.append('password', senha); 
 
       try {
             const responseToken = await api.post('autenticacao/token/', params);
             const {token} = responseToken.data;
+
+            await AsyncStorage.setItem(keyAsyncStorage, JSON.stringify(token));
             console.log(token)
-            const responseDataUser = await api.get('minhas-informacoes/meus-dados/',{
-                headers:{
-                    'authorization': 'jwt ' + token,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                }
-            });
-            console.log(responseDataUser.data);
+            setLogin(''); 
+            setSenha(''); 
+            Keyboard.dismiss(); 
+
+            autenticationUser();
 
       }catch(error){
         Alert.alert('Error');
       }
     }
 
+    async function clear() {
+      await AsyncStorage.clear();
+    }
+
+    useEffect( ()=> {
+      autenticationUser();
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -47,7 +78,7 @@ export function Login({navigation}) {
                   style={styles.logo}
             />  
             <Text style={styles.textLogo}>
-                  IFRN - Pau dos Ferros
+                  IFRN.DO
             </Text>
           </View> 
 
@@ -61,8 +92,6 @@ export function Login({navigation}) {
                     Entrar
               </Text>
             </TouchableOpacity>
-
-            <TouchableOpacity onPress={()=>navigation.navigate('Home')}><Text>Home</Text></TouchableOpacity>
 
           </View>
         </View>
