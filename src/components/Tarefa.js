@@ -16,7 +16,7 @@ export function Tarefa(props){
             <Text style={styles.tarefa}>{props.name}</Text>
 
             <View style={styles.contanerBtn}>
-                <TouchableOpacity style={styles.btn} onPress={props.deletar}>
+                <TouchableOpacity style={styles.btn} onPress={props.apagar}>
                     <Icon name='trash' size={30} color='gray'/>
                 </TouchableOpacity>
             </View>
