@@ -1,7 +1,8 @@
 {
   "expo": {
     "name": "appIfrnDo",
-    "slug": "appIfrnDo",
+    "slug": "appIfrndo",
+    "scheme": "appIfrndo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

@@ -4,7 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import {Input} from '../components/Input'
 import api from '../services/api'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import * as AuthSession from 'expo-auth-session';
 
 export function Login({navigation}) {
 
@@ -12,6 +12,23 @@ export function Login({navigation}) {
 
     const [login, setLogin] = useState('');
     const [senha, setSenha] = useState('');
+
+    async function handleSignWithGoogle(){
+      try {
+        const CLIENTE_ID = '809616264268-p1v5vke26a6qgo6aaqetbi41m88bl7eg.apps.googleusercontent.com'
+        const REDIRECT_URI = 'https://auth.expo.io/@leocassio/ifrndo'
+        const RESPONSE_TYPE = 'token'
+        const SCOPE = encodeURI('profile email')
+        const authUrl = `https://accounts.google.com/o/oauth2/vs/auth?client_id=${CLIENTE_ID}&redirect_uri=${REDIRECT_URI}&response_type=${RESPONSE_TYPE}&scope=${SCOPE}`;
+
+        const resposta = AuthSession.startAsync({authUrl})
+        
+        console.log(resposta);
+
+      } catch (error) {
+        Alert.alert("Error na auteticação!");
+      }
+    }
 
     async function autenticationUser(){
       try {
